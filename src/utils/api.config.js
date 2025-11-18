@@ -1,16 +1,17 @@
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = import.meta.env.MODE === 'development';
 
 export const API_CONFIG = {
   BASE_URL: isDev
-    ? 'http://localhost:8000/api/'
+    ? 'http://localhost:8000'
     : 'https://api.yourproductiondomain.com/api',
   TIMEOUT: 5000,
 };
 
-const ENDPOINTS = {
-    DASHBOARD: {
-        ADMIN: '/admin/'
-    }
-}
-
-export { ENDPOINTS }
+export const ENDPOINTS = {
+  AUTH: {
+     LOGIN: '/api/auth/login/',          
+     LOGOUT: '/api/auth/logout/',         
+     PROFILE: '/api/auth/profile/',
+     USERS: '/api/auth/users/',
+  },
+};
