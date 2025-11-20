@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import StatsCard from "../components/dashboard/StatsCard";
 import UserManagement from "../components/dashboard/UserManagement";
-import Header from "../components/layout/Header";
-import Sidebar from "../components/layout/Sidebar";
 
 
 const Overview = () => {

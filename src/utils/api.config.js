@@ -14,4 +14,12 @@ export const ENDPOINTS = {
      PROFILE: '/api/auth/profile/',
      USERS: '/api/auth/users/',
   },
+  FARM: {
+    LIST: '/api/farms/',
+    DETAIL: (id) => `/api/farms/${id}/`,
+    COOPS: '/api/coops/',
+  },
+  SENSORS: {
+    LOCAL_READINGS: '/api/sensors-data/local-readings/',
+  }
 };

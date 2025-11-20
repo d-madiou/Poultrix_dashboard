@@ -3,6 +3,7 @@ import './App.css'
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import Overview from './pages/Overview';
+import FarmManagement from './components/dashboard/FarmManagement';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -14,7 +15,8 @@ const App = () => {
         <Header />
         <main className="flex-1 overflow-y-auto">
           {activeTab === 'overview' && <Overview />}
-          {activeTab !== 'overview' && (
+          {activeTab === 'farm' && <FarmManagement />}
+          {activeTab !== 'overview' && activeTab !== 'farm' &&(
             <div className="p-6">
               <h1 className="text-2xl font-bold text-gray-900 capitalize">
                 {activeTab.replace('-', ' ')}
