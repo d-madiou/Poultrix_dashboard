@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import apiService from '../../services/api.service';
-import { ENDPOINTS } from '../../utils/api.config';
 import FarmDetail from './FarmDetail';
 import farmService from '../../services/farm.service';
 

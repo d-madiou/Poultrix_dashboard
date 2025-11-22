@@ -1,3 +1,4 @@
+// CoopDetail.jsx
 import { useEffect, useState } from "react";
 import sensorService from "../../services/sensors.service";
 import SensorChart from "./SensorChart";
@@ -10,8 +11,16 @@ const CoopDetail = ({ coop, onBack }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await sensorService.getLocalReadings(coop.id);
-        setReadings(data);
+        // 1. Fetch the historical list (webhook endpoint)
+        const allData = await sensorService.getHistoricalReadings();
+        
+        // 2. Filter for this coop manually since backend returns all
+        // Note: Ensure your serializer returns 'coop_name' or 'coop' (id)
+        const coopReadings = allData.filter(r => 
+            r.coop === coop.id || r.coop_name === coop.name // Adjust based on exact serializer output
+        );
+        
+        setReadings(coopReadings);
       } catch (err) {
         console.error(err);
       } finally {
@@ -19,8 +28,9 @@ const CoopDetail = ({ coop, onBack }) => {
       }
     };
     fetchData();
-  }, [coop.id]);
+  }, [coop.id, coop.name]);
 
+  // 3. Map data (Historical endpoint still uses 'temperature', not 'avg_temperature')
   const chartData = {
     temperature: readings.map(r => r.temperature).reverse(),
     humidity: readings.map(r => r.humidity).reverse(),
@@ -41,7 +51,7 @@ const CoopDetail = ({ coop, onBack }) => {
         </button>
         <div>
             <h1 className="text-2xl font-bold text-gray-900">{coop.name}</h1>
-            <p className="text-sm text-gray-500">Sensor Analytics</p>
+            <p className="text-sm text-gray-500">Historical Analytics</p>
         </div>
       </div>
 
@@ -52,25 +62,25 @@ const CoopDetail = ({ coop, onBack }) => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <SensorChart 
-            title="Temperature" 
+            title="Temperature History" 
             data={chartData.temperature} 
             label="°C" 
             color="orange" 
           />
           <SensorChart 
-            title="Humidity" 
+            title="Humidity History" 
             data={chartData.humidity} 
             label="%" 
             color="green" 
           />
           <SensorChart 
-            title="Water Level" 
+            title="Water Level History" 
             data={chartData.water} 
             label="%" 
             color="blue" 
           />
           <SensorChart 
-            title="Feed Level" 
+            title="Feed Level History" 
             data={chartData.feed} 
             label="%" 
             color="yellow" 

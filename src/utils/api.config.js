@@ -1,3 +1,4 @@
+// api.config.js
 const isDev = import.meta.env.MODE === 'development';
 
 export const API_CONFIG = {
@@ -20,6 +21,11 @@ export const ENDPOINTS = {
     COOPS: '/api/coops/',
   },
   SENSORS: {
-    LOCAL_READINGS: '/api/sensors-data/local-readings/',
+    // 1. For Charts (Historical Data)
+    HISTORY: '/api/sensors/webhook/', 
+    // 2. For Dashboard Cards (Live Averages)
+    LIVE: '/api/sensors/live-readings/', 
+    // 3. For Camera Status (Health Checks)
+    HEALTH: '/api/sensors/health-checks/',
   }
 };
