@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import poultrixLogo from '../../assets/logo.png';
 import {
-  Sprout, 
   Eye,
   EyeOff
 } from 'lucide-react';
@@ -30,17 +30,10 @@ const LoginPage = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-2">
-            <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-              <Sprout className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-3xl font-bold text-gray-800">
-              P<span className="text-orange-500">O</span>ULTRIX
-            </span>
-          </div>
+          <img src={poultrixLogo} alt="Poultrix Logo" className="h-14 mx-auto mb-2" />
           <p className="text-gray-600 text-sm">Admin Dashboard</p>
         </div>
 

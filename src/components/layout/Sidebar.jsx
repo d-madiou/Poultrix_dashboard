@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import poultrixLogo from '../../assets/logo.png';
 import { 
   LayoutDashboard, 
   Sprout, 
@@ -22,15 +23,8 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="w-64 bg-gray-50 h-screen flex flex-col border-r border-gray-200">
-      <div className="p-6">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-            <Sprout className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-bold text-gray-800">
-            P<span className="text-orange-500">O</span>ULTRIX
-          </span>
-        </div>
+      <div className="p-6 flex items-center justify-center">
+        <img src={poultrixLogo} alt="Poultrix Logo" className="h-12" />
       </div>
 
       <nav className="flex-1 px-3">

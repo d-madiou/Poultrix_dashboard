@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search,
   Sun,
@@ -6,21 +6,36 @@ import {
   Bell,
   Menu
 } from 'lucide-react';
+import alertService from '../../services/alerts.service';
 
-const Header = () => {
+const Header = ({ onMenuClick, onNotificationClick }) => {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const alerts = await alertService.getAlerts({ resolved: false });
+        if (Array.isArray(alerts)) {
+          setUnreadCount(alerts.length);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notification count", error);
+      }
+    };
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000); 
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-30">
       <div className="flex items-center gap-4">
-        <button className="p-2 hover:bg-gray-100 rounded-lg lg:hidden">
+        <button onClick={onMenuClick} className="p-2 hover:bg-gray-100 rounded-lg lg:hidden">
           <Menu className="w-5 h-5 text-gray-600" />
         </button>
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
-          </button>
-          <span className="text-sm text-gray-400 mx-2">/</span>
           <span className="text-sm font-medium text-gray-600">Dashboards</span>
           <span className="text-sm text-gray-400 mx-2">/</span>
           <span className="text-sm font-medium text-gray-900">Overview</span>
@@ -28,22 +43,27 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="relative">
+        <div className="relative hidden md:block">
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search"
-            className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent w-64"
+            placeholder="Search..."
+            className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 w-64"
           />
         </div>
-        <button className="p-2 hover:bg-gray-100 rounded-lg">
-          <Sun className="w-5 h-5 text-gray-600" />
-        </button>
-        <button className="p-2 hover:bg-gray-100 rounded-lg">
-          <RotateCcw className="w-5 h-5 text-gray-600" />
-        </button>
-        <button className="p-2 hover:bg-gray-100 rounded-lg">
+        
+        {/* Notification Bell - Now clickable */}
+        <button 
+          onClick={onNotificationClick}
+          className="p-2 hover:bg-gray-100 rounded-lg relative transition-colors cursor-pointer"
+          title="View Alerts"
+        >
           <Bell className="w-5 h-5 text-gray-600" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </button>
       </div>
     </header>
