@@ -7,11 +7,15 @@ class AuthService {
       console.log('[Auth] Attempting login...');
       const response = await apiService.post(ENDPOINTS.AUTH.LOGIN, credentials);
       
-      console.log('[Auth] Login response:', response);
-      
       if (response && response.access) {
+        // Use the helper method
         apiService.setToken(response.access, response.refresh);
-        console.log('[Auth] Tokens saved successfully');
+        
+        // Save User Details (Role)
+        if (response.user) {
+            localStorage.setItem('user', JSON.stringify(response.user));
+        }
+        
         return response;
       }
       
@@ -25,24 +29,22 @@ class AuthService {
   async logout() {
     try {
       const refreshToken = apiService.getRefreshToken();
-      console.log('[Auth] Logging out...');
-      
       if (refreshToken) {
         await apiService.post(ENDPOINTS.AUTH.LOGOUT, { refresh: refreshToken });
       }
     } catch (error) {
-      console.error('[Auth] Logout error:', error);
+      console.warn('[Auth] Logout API call failed (session might already be expired)');
     } finally {
       apiService.clearToken();
-      console.log('[Auth] Tokens cleared');
     }
   }
 
   async getProfile() {
     try {
-      console.log('[Auth] Fetching profile...');
       const profile = await apiService.get(ENDPOINTS.AUTH.PROFILE);
-      console.log('[Auth] Profile fetched:', profile);
+      if (profile) {
+        localStorage.setItem('user', JSON.stringify(profile));
+      }
       return profile;
     } catch (error) {
       console.error('[Auth] Failed to fetch profile:', error);
@@ -50,32 +52,21 @@ class AuthService {
     }
   }
 
-  //Let's get all users from the database
-  // async getAllUsers(){
-  //   try{
-  //     const users = await apiService.get()
-  //   }
-  // }
-
   async refreshToken() {
     try {
       const refreshToken = apiService.getRefreshToken();
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
-      }
+      if (!refreshToken) throw new Error('No refresh token');
 
-      const response = await apiService.post(ENDPOINTS.AUTH.TOKEN_REFRESH, {
+      const response = await apiService.post(ENDPOINTS.AUTH.USERS + 'token/refresh/', {
         refresh: refreshToken
       });
 
       if (response && response.access) {
-        apiService.setToken(response.access);
+        apiService.setToken(response.access); // Only updates access token
         return response.access;
       }
-
       throw new Error('Failed to refresh token');
     } catch (error) {
-      console.error('[Auth] Token refresh failed:', error);
       apiService.clearToken();
       throw error;
     }

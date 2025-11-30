@@ -12,6 +12,16 @@ class UserService{
         }
     }
 
+    async getFarmers(){
+        try{
+            const response = await apiService.get(ENDPOINTS.AUTH.FARMERS);
+            return response;
+        } catch(error){
+            console.error('[UserService] Failed to fetch users:', error);
+            throw error;
+        }
+    }
+
     async getUserById(id){
         try{
             const response = await apiService.get(`${ENDPOINTS.AUTH.USERS}/${id}`);
