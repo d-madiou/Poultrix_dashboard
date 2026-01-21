@@ -13,24 +13,16 @@ class AlertService {
             if (params.severity) queryParams.append('severity', params.severity);
             
             const url = `${ENDPOINTS.ALERTS.LIST}?${queryParams.toString()}`;
-        
-            console.log(`[AlertService] Requesting: ${url}`);
             
             const response = await apiService.get(url);
             
-            console.log('[AlertService] Raw API Response:', response);
-            
+            // Handle Django pagination vs Array response
             if (response && response.results && Array.isArray(response.results)) {
-                console.log('[AlertService] Detected Paginated Response. Count:', response.results.length);
                 return response.results;
             } else if (Array.isArray(response)) {
-                console.log('[AlertService] Detected Array Response. Count:', response.length);
                 return response;
             }
-            
-            console.warn('[AlertService] Response format unrecognized, returning empty array.');
             return [];
-            
         } catch (error) {
             console.error('[AlertService] Failed to fetch alerts:', error);
             return [];
@@ -47,6 +39,37 @@ class AlertService {
             return await apiService.post(url, {});
         } catch (error) {
             console.error('[AlertService] Failed to resolve alert:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Mark multiple alerts as resolved
+     * @param {number[]} alertIds 
+     */
+    async resolveAll(alertIds) {
+        try {
+            // Execute all resolve requests in parallel
+            const promises = alertIds.map(id => this.resolveAlert(id));
+            return await Promise.all(promises);
+        } catch (error) {
+            console.error('[AlertService] Failed to resolve all selected alerts:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Delete an alert permanently
+     * @param {number} alertId 
+     */
+    async deleteAlert(alertId) {
+        try {
+            // Assumes standard REST path /api/alerts/{id}/
+            // We append the ID to the LIST endpoint
+            const url = `${ENDPOINTS.ALERTS.LIST}${alertId}/`;
+            return await apiService.delete(url);
+        } catch (error) {
+            console.error('[AlertService] Failed to delete alert:', error);
             throw error;
         }
     }

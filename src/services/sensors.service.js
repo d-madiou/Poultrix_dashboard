@@ -26,7 +26,6 @@ class SensorService {
     // 3. Get Historical Data (Charts)
     async getHistoricalReadings() {
         try {
-            // Note: Ideally your backend should support ?coop_id=X filtering here
             return await apiService.get(ENDPOINTS.SENSORS.HISTORY);
         } catch (error) {
             console.error('[SensorsService] Failed to fetch history:', error);

@@ -17,7 +17,6 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { id: 'farm', icon: Sprout, label: 'Farm Management' },
     { id: 'devices', icon: Monitor, label: 'Devices Monitoring' },
     { id: 'alerts', icon: AlertTriangle, label: 'AI Alerts & Logs' },
-    { id: 'reports', icon: BarChart3, label: 'Reports & Analytics' },
     { id: 'settings', icon: Settings, label: 'System Settings' },
   ];
 

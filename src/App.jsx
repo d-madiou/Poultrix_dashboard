@@ -7,6 +7,7 @@ import Overview from './pages/Overview';
 import FarmManagement from './components/dashboard/FarmManagement';
 import AlertsAndLogs from './pages/AlertsAndLogs';
 import DeviceManagement from './pages/DeviceManagement';
+import Settings from './pages/Settings';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -33,6 +34,7 @@ const App = () => {
           {activeTab === 'farm' && <FarmManagement />}
           {activeTab === 'alerts' && <AlertsAndLogs />}
           {activeTab === 'devices' && <DeviceManagement />}
+          {activeTab === 'settings' && <Settings />}
           
           {/* Fallback for tabs not yet implemented */}
           {activeTab !== 'overview' && activeTab !== 'farm' && activeTab !== 'alerts' && (

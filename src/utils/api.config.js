@@ -23,7 +23,8 @@ export const ENDPOINTS = {
   },
 
   SENSORS: {
-    HISTORY: '/api/sensors/sensor-reading/',
+    HISTORY: '/api/sensors/sensor-data-all/',
+    
     LIVE: '/api/sensors/sensor-reading/',
     HEALTH: '/api/sensors/poo-health-latest/',
   },
@@ -32,6 +33,7 @@ export const ENDPOINTS = {
     LIST: '/api/alerts/',
     RESOLVE: (id) => `/api/alerts/${id}/resolve/`,
   },
+  
   EDGE_DEVICES: {
     LIST: '/api/farm/edge-devices/',
     DETAIL: (id) => `/api/farm/edge-devices/${id}/`,

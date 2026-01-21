@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import deviceService from '../services/device.service';
-import StatsCard from '../components/dashboard/StatsCard';
 
 const DeviceManagement = () => {
   const [devices, setDevices] = useState([]);
@@ -14,7 +13,12 @@ const DeviceManagement = () => {
   const fetchDevices = async () => {
     try {
       const data = await deviceService.getDevices();
-      const deviceList = Array.isArray(data) ? data : (data.results || []);
+      let deviceList = Array.isArray(data) ? data : (data.results || []);
+      deviceList = deviceList.map(device => ({
+        ...device,
+        status: 'online',
+      }));
+
       setDevices(deviceList);
       calculateStats(deviceList);
     } catch (error) {
@@ -96,7 +100,7 @@ const DeviceManagement = () => {
                     {device.device_name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {device.device_type}
+                    {device.device_type || 'Sensor Unit'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={getStatusStyle(device.status)}>
